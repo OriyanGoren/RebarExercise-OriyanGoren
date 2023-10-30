@@ -11,9 +11,14 @@ namespace RebarExercise.Models
         private double _priceSizeM;
         private double _priceSizeL;
 
-        public ShakeMenu() 
+        public ShakeMenu(String name, String description) 
         {
             _ID = Guid.NewGuid();
+            _name = name;
+            _description = description;
+            _priceSizeS = 20;
+            _priceSizeM = 25;
+            _priceSizeL = 30;
 
         }
 

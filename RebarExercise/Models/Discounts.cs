@@ -5,9 +5,10 @@
         private String _description;
         private double _percentage;
 
-        public Discounts()
+        public Discounts(String description, double percentage)
         {
-
+            _description = description;
+            _percentage = percentage;
         }
     }
 }

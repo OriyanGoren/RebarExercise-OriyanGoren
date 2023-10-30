@@ -5,8 +5,10 @@
         private List<Order> _orders;
         private double _price;
 
-        public Bill()
-        {
+        public Bill(double price)
+        {   
+            _orders = new List<Order>();
+            _price = price;
 
         }
     }

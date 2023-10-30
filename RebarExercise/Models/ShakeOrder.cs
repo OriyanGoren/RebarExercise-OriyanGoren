@@ -8,10 +8,13 @@
         private double _price;
         private String _size;
 
-        public ShakeOrder() 
+        public ShakeOrder(String name, String description, double price, String size) 
         {
             _ID = Guid.NewGuid();
-
+            _name = name;
+            _description = description;
+            _price = price;
+            _size = size;
         }
 
     }
