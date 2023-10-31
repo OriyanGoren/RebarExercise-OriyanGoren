@@ -10,6 +10,14 @@
 
         }
 
+        /*
+        private void AddShakeToMenu(String name, String description, double price, String size)
+        {
+            ShakeMenu shakeMenu = new ShakeMenu(name, description, price, size);
+            AddShakeToMenu(shakeMenu);
+        }
+        */
+
         private void AddShakeToMenu(ShakeMenu shakeMenu)
         {
             if(_shakesMenu.Contains(shakeMenu))

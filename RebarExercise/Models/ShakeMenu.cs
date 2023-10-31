@@ -19,7 +19,6 @@ namespace RebarExercise.Models
             _priceSizeS = 20;
             _priceSizeM = 25;
             _priceSizeL = 30;
-
         }
 
     }
