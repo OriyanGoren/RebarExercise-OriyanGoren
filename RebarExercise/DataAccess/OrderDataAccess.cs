@@ -8,6 +8,12 @@ namespace RebarExercise.DataAccess
         private const string ConnectingString = "mongodb://127.0.0.1:27017";
         private const string DataBaseName = "Rebar";
         private const string CollectionName = "Orders";
+        private readonly IMongoCollection<Order> _ordersCollection;
+
+        public OrderDataAccess()
+        {
+            _ordersCollection = ConnectToMongo<Order>(CollectionName);
+        }
 
         private IMongoCollection<T> ConnectToMongo<T>(in string collection)
         {
@@ -19,16 +25,14 @@ namespace RebarExercise.DataAccess
         //GET
         public async Task<List<Order>> GetOrders()
         {
-            var ordersCollection = ConnectToMongo<Order>(CollectionName);
-            var result = await ordersCollection.FindAsync(_ => true);
+            var result = await _ordersCollection.FindAsync(_ => true);
             return result.ToList();
         }
 
         //POST
         public async Task CreateOrder(Order order)
         {
-            var ordersCollection = ConnectToMongo<Order>(CollectionName);
-            await ordersCollection.InsertOneAsync(order);
+            await _ordersCollection.InsertOneAsync(order);
         }
     }
 }

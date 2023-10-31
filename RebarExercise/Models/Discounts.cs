@@ -4,7 +4,7 @@ namespace RebarExercise.Models
     public class Discounts
     {
         private String _description;
-        private double _percentage;
+        public double _percentage { get; set; }
 
         public Discounts(String description, double percentage)
         {

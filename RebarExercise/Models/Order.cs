@@ -5,22 +5,32 @@ namespace RebarExercise.Models
 {
     public class Order
     {
-        private Guid _ID;
-        private String _customerName;
-        private DateTime _date;
-        private double _price;
-        private List<ShakeMenu> _shakesOrder;
-        private List<Discounts> _discounts;
+        public Guid _ID;
+        public String _customerName { get; set; }
+        public DateTime _date { get; set; }
+        public double _price { get; set; }
+        public List<ShakeOrder> ShakesOrder { get; set; }
+        public List<Discounts> _discounts { get; set; }
 
-        public Order(DateTime date) 
+        public Order()
         {
             _ID = Guid.NewGuid();
-            _customerName = "customerName";
-            _date = date;
-            _price = 200;
-            _shakesOrder = new List<ShakeMenu>();
+            _price = CalculatePrice();
+            ShakesOrder = new List<ShakeOrder>();
             _discounts = new List<Discounts>();
         }
 
+        private double CalculatePrice()
+        {
+            double price = 0;
+            foreach (ShakeOrder shake in ShakesOrder)
+            {
+                price += shake.Price;
+            }
+            
+            return price;
+        }
+
+       
     }
 }

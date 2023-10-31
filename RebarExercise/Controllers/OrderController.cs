@@ -34,6 +34,32 @@ namespace RebarExercise.Controllers
         {
             try
             {
+                ShakesDataAccess shakeDataAccess = new ShakesDataAccess();
+                foreach (ShakeOrder shake in order.ShakesOrder)
+                {
+                    var s = shakeDataAccess.GetShakeFromMenu(shake.Name);
+
+                    if (s == null)
+                    {
+                        return BadRequest("Invalid shake data.");
+                    }
+                    else if (shake.Size == "S")
+                    {
+                        shake.Price = s.PriceSizeS;
+                    }
+                    else if(shake.Size == "M")
+                    {
+                        shake.Price = s.PriceSizeM;
+                    }
+                    else if(shake.Size == "L")
+                    {
+                        shake.Price = s.PriceSizeL;
+                    }
+                    else
+                    {
+                        return BadRequest("Invalid shake data.");
+                    }
+                }
                 if (order == null)
                 {
                     return BadRequest("Invalid shake data.");

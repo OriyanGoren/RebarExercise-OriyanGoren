@@ -8,11 +8,11 @@ namespace RebarExercise.DataAccess
         private const string ConnectingString = "mongodb://127.0.0.1:27017";
         private const string DataBaseName = "Rebar";
         private const string CollectionName = "Menu";
-        private readonly IMongoCollection<ShakeMenu> shakesFromMenuCollection;
+        private readonly IMongoCollection<ShakeMenu> _shakesFromMenuCollection;
 
         public ShakesDataAccess()
         {
-            shakesFromMenuCollection = ConnectToMongo<ShakeMenu>(CollectionName);
+            _shakesFromMenuCollection = ConnectToMongo<ShakeMenu>(CollectionName);
         }
 
         private IMongoCollection<T> ConnectToMongo<T>(in string collection)
@@ -25,15 +25,23 @@ namespace RebarExercise.DataAccess
         //GET
         public async Task<List<ShakeMenu>> GetShakesFromMenu()
         {
-            var result = await shakesFromMenuCollection.FindAsync(_ => true);
+            var result = await _shakesFromMenuCollection.FindAsync(_ => true);
             return result.ToList();
         }
 
         //POST
         public async Task CreateShakeToMenu(ShakeMenu shake)
         {
-            await shakesFromMenuCollection.InsertOneAsync(shake);
+            await _shakesFromMenuCollection.InsertOneAsync(shake);
         }
-        
+
+
+
+        public ShakeMenu GetShakeFromMenu(string name)
+        {
+            var result = _shakesFromMenuCollection.Find(shake => shake.Name == name);
+            return result.FirstOrDefault();
+        }
+
     }
 }
