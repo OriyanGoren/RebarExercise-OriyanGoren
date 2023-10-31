@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RebarExercise.DataAccess;
 using RebarExercise.Models;
 
 namespace RebarExercise.Controllers
 {
+    [Route("api/bill")]
+    [ApiController]
     public class BillController : ControllerBase
     {
         private readonly BillDataAccess _billDataAccess;
@@ -15,7 +16,6 @@ namespace RebarExercise.Controllers
         }
 
         [HttpGet]
-        [Route("api/bills")]
         public async Task<ActionResult<IEnumerable<Bill>>> GetBills()
         {
             try
@@ -30,7 +30,6 @@ namespace RebarExercise.Controllers
         }
 
         [HttpPost]
-        [Route("api/bills")]
         public async Task<IActionResult> CreateBill([FromBody] Bill bill)
         {
             try

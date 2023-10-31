@@ -1,25 +1,22 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RebarExercise.DataAccess;
 using RebarExercise.Models;
 
 namespace RebarExercise.Controllers
 {
-    [Route("api/ShakesFromMenu")]
+    [Route("api/shakes")]
     [ApiController]
-    public class ShakesMenuController : ControllerBase
+    public class ShakesController : ControllerBase
     {
-        private readonly ShakesMenuDataAccess _shakesMenuDataAccess;
+        private readonly ShakesDataAccess _shakesMenuDataAccess;
 
-        public ShakesMenuController()
+        public ShakesController()
         {
-            _shakesMenuDataAccess = new ShakesMenuDataAccess();
+            _shakesMenuDataAccess = new ShakesDataAccess();
         }
 
-        
-        // GET: api/ShakesFromMenu
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ShakesMenu>>> GetShakesFromMenu()
+        public async Task<ActionResult<IEnumerable<ShakeMenu>>> GetShakesFromMenu()
         {
             try
             {
@@ -32,9 +29,8 @@ namespace RebarExercise.Controllers
             }
         }
 
-        // POST: api/ShakesFromMenu
         [HttpPost]
-        public async Task<ActionResult> CreateShakeToMenu(ShakesMenu shakeMenu)
+        public async Task<ActionResult> CreateShakeToMenu([FromBody] ShakeMenu shakeMenu)
         {
             try
             {
@@ -43,7 +39,6 @@ namespace RebarExercise.Controllers
                     return BadRequest("Invalid shake data.");
                 }
 
-                // Add the shake to the menu
                 await _shakesMenuDataAccess.CreateShakeToMenu(shakeMenu);
                 return Ok("Shake created successfully");
             }

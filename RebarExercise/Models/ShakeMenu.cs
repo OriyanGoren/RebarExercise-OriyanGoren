@@ -1,24 +1,28 @@
-﻿using System.Drawing;
-
+﻿
 namespace RebarExercise.Models
 {
     public class ShakeMenu
     {
-        private Guid _ID;
-        private String _name;
-        private String _description;
-        private double _priceSizeS;
-        private double _priceSizeM;
-        private double _priceSizeL;
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public double PriceSizeS { get; set; }
+        public double PriceSizeM { get; set; }
+        public double PriceSizeL { get; set; }
 
-        public ShakeMenu(String name, String description) 
+        public ShakeMenu()
         {
-            _ID = Guid.NewGuid();
-            _name = name;
-            _description = description;
-            _priceSizeS = 20;
-            _priceSizeM = 25;
-            _priceSizeL = 30;
+            Id = Guid.NewGuid();
+        }
+
+        public ShakeMenu(String name = "Relax", String description = "Tropical flavored drink", double priceSizeS = 20, double priceSizeM = 25, double priceSizeL = 30)
+        {
+            Id = Guid.NewGuid();
+            Name = name;
+            Description = description;
+            PriceSizeS = priceSizeS;
+            PriceSizeM = priceSizeM;
+            PriceSizeL = priceSizeL;
         }
 
     }

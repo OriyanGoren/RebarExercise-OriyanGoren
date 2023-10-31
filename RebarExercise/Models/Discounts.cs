@@ -1,4 +1,5 @@
-﻿namespace RebarExercise.Models
+﻿
+namespace RebarExercise.Models
 {
     public class Discounts
     {

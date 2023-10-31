@@ -1,14 +1,19 @@
 ﻿using RebarExercise.Models;
-using RebarExercise.DataAccess;
 using MongoDB.Driver;
 
 namespace RebarExercise.DataAccess
 {
-    public class ShakesMenuDataAccess
+    public class ShakesDataAccess
     {
         private const string ConnectingString = "mongodb://127.0.0.1:27017";
         private const string DataBaseName = "Rebar";
         private const string CollectionName = "Menu";
+        private readonly IMongoCollection<ShakeMenu> shakesFromMenuCollection;
+
+        public ShakesDataAccess()
+        {
+            shakesFromMenuCollection = ConnectToMongo<ShakeMenu>(CollectionName);
+        }
 
         private IMongoCollection<T> ConnectToMongo<T>(in string collection)
         {
@@ -18,18 +23,16 @@ namespace RebarExercise.DataAccess
         }
 
         //GET
-        public async Task<List<ShakesMenu>> GetShakesFromMenu()
+        public async Task<List<ShakeMenu>> GetShakesFromMenu()
         {
-            var shakesFromMenuCollection = ConnectToMongo<ShakesMenu>(CollectionName);
             var result = await shakesFromMenuCollection.FindAsync(_ => true);
             return result.ToList();
         }
 
         //POST
-        public async Task CreateShakeToMenu(ShakesMenu shakeToMenu)
+        public async Task CreateShakeToMenu(ShakeMenu shake)
         {
-            var shakesFromMenuCollection = ConnectToMongo<ShakesMenu>(CollectionName);
-            await shakesFromMenuCollection.InsertOneAsync(shakeToMenu);
+            await shakesFromMenuCollection.InsertOneAsync(shake);
         }
         
     }

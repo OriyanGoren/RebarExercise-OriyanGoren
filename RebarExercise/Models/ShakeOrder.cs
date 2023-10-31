@@ -1,20 +1,18 @@
-﻿namespace RebarExercise.Models
+﻿
+namespace RebarExercise.Models
 {
     public class ShakeOrder
     {
-        private Guid _ID;
-        private String _name;
-        private String _description;
-        private double _price;
-        private String _size;
+        public Guid Id;
+        public string NameShake { get; set; }
 
-        public ShakeOrder(String name, String description, double price, String size) 
+        public string NameCustomer { get; set; }
+        public double Size { get; set; }
+
+
+        public ShakeOrder() 
         {
-            _ID = Guid.NewGuid();
-            _name = name;
-            _description = description;
-            _price = price;
-            _size = size;
+            Id = Guid.NewGuid();
         }
 
     }

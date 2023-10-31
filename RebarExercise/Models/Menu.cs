@@ -1,17 +1,12 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-
+﻿
 namespace RebarExercise.Models
 {
-    public class ShakesMenu
+    public class Menu
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-
         private Guid _ID;
         private List<ShakeMenu> _shakesMenu;
 
-        public ShakesMenu()
+        public Menu()
         {
             _ID = Guid.NewGuid();
             _shakesMenu = new List<ShakeMenu>();

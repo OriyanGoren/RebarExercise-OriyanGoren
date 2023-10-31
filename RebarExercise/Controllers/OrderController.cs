@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RebarExercise.DataAccess;
 using RebarExercise.Models;
 
 namespace RebarExercise.Controllers
 {
+    [Route("api/order")]
+    [ApiController]
     public class OrderController : ControllerBase
     {
         private readonly OrderDataAccess _orderDataAccess;
@@ -15,7 +16,6 @@ namespace RebarExercise.Controllers
         }
 
         [HttpGet]
-        [Route("api/orders")]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
             try
@@ -30,7 +30,6 @@ namespace RebarExercise.Controllers
         }
 
         [HttpPost]
-        [Route("api/orders")]
         public async Task<IActionResult> CreateOrder([FromBody] Order order)
         {
             try
