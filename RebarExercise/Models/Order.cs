@@ -1,7 +1,13 @@
-﻿namespace RebarExercise.Models
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+
+namespace RebarExercise.Models
 {
     public class Order
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+
         private Guid _ID;
         private String _customerName;
         private DateTime _date;
