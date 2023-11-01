@@ -30,40 +30,47 @@ namespace RebarExercise.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] Order order)
+        public async Task<ActionResult> CreateOrder([FromBody] Order order)
         {
             try
             {
-                ShakesDataAccess shakeDataAccess = new ShakesDataAccess();
-                foreach (ShakeOrder shake in order.ShakesOrder)
-                {
-                    var s = shakeDataAccess.GetShakeFromMenu(shake.Name);
 
-                    if (s == null)
+                if (order == null || order.ShakesOrder == null)
+                {
+                    return BadRequest("Invalid order data.");
+                }
+                if(order.ShakesOrder.Count > 10)
+                {
+                    return BadRequest("You cannot order more than 10 shakes.");
+                }
+                ShakesDataAccess shakeDataAccess = new ShakesDataAccess();
+                foreach (ShakeOrder shakeOrder in order.ShakesOrder)
+                {
+                    var shake = shakeDataAccess.GetShakeFromMenu(shakeOrder.Name);
+                    
+                    if (shake == null)
                     {
-                        return BadRequest("Invalid shake data.");
+                        return BadRequest("The shake you entered does not appear in the menu.");
                     }
-                    else if (shake.Size == "S")
+                    else if (shakeOrder.Size == "S")
                     {
-                        shake.Price = s.PriceSizeS;
+                        shakeOrder.Price = shake.PriceSizeS;
                     }
-                    else if(shake.Size == "M")
+                    else if(shakeOrder.Size == "M")
                     {
-                        shake.Price = s.PriceSizeM;
+                        shakeOrder.Price = shake.PriceSizeM;
                     }
-                    else if(shake.Size == "L")
+                    else if(shakeOrder.Size == "L")
                     {
-                        shake.Price = s.PriceSizeL;
+                        shakeOrder.Price = shake.PriceSizeL;
                     }
                     else
                     {
-                        return BadRequest("Invalid shake data.");
+                        return BadRequest("The size of the shake entered is incorrect.");
                     }
                 }
-                if (order == null)
-                {
-                    return BadRequest("Invalid shake data.");
-                }
+                order.Date = DateTime.Now;
+                order.Price = CalculatePrice(order);
                 await _orderDataAccess.CreateOrder(order);
                 return Ok("Order created successfully");
             }
@@ -71,6 +78,17 @@ namespace RebarExercise.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Internal Server Error: {ex.Message}");
             }
+        }
+
+        private double CalculatePrice(Order order)
+        {
+            double sumOfPrices = 0;
+            foreach (ShakeOrder shake in order.ShakesOrder)
+            {
+                sumOfPrices += shake.Price;
+            }
+
+            return sumOfPrices;
         }
 
     }

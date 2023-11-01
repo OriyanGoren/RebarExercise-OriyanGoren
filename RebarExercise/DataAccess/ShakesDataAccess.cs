@@ -35,8 +35,6 @@ namespace RebarExercise.DataAccess
             await _shakesFromMenuCollection.InsertOneAsync(shake);
         }
 
-
-
         public ShakeMenu GetShakeFromMenu(string name)
         {
             var result = _shakesFromMenuCollection.Find(shake => shake.Name == name);
