@@ -8,11 +8,11 @@ namespace RebarExercise.DataAccess
         private const string ConnectingString = "mongodb://127.0.0.1:27017";
         private const string DataBaseName = "Rebar";
         private const string CollectionName = "Menu";
-        private readonly IMongoCollection<ShakeMenu> _shakesFromMenuCollection;
+        private readonly IMongoCollection<ShakeMenu> _shakesCollection;
 
         public ShakesDataAccess()
         {
-            _shakesFromMenuCollection = ConnectToMongo<ShakeMenu>(CollectionName);
+            _shakesCollection = ConnectToMongo<ShakeMenu>(CollectionName);
         }
 
         private IMongoCollection<T> ConnectToMongo<T>(in string collection)
@@ -25,28 +25,27 @@ namespace RebarExercise.DataAccess
         //GET
         public async Task<List<ShakeMenu>> GetShakesFromMenu()
         {
-            var result = await _shakesFromMenuCollection.FindAsync(_ => true);
+            var result = await _shakesCollection.FindAsync(_ => true);
             return result.ToList();
         }
 
         //POST
         public async Task CreateShakeToMenu(ShakeMenu shake)
         {
-            await _shakesFromMenuCollection.InsertOneAsync(shake);
+            await _shakesCollection.InsertOneAsync(shake);
         }
 
         public ShakeMenu GetShakeByName(string name)
         {
-            var result = _shakesFromMenuCollection.Find(shake => shake.Name == name);
+            var result = _shakesCollection.Find(shake => shake.Name == name);
             return result.FirstOrDefault();
         }
 
         public async Task<ShakeMenu> GetShakeById(Guid shakeId)
         {
             var filter = Builders<ShakeMenu>.Filter.Eq(o => o.Id, shakeId);
-            var result = await _shakesFromMenuCollection.Find(filter).FirstOrDefaultAsync();
+            var result = await _shakesCollection.Find(filter).FirstOrDefaultAsync();
             return result;
         }
-
     }
 }
