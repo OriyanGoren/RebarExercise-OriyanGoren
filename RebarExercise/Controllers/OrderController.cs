@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
 using RebarExercise.DataAccess;
 using RebarExercise.Models;
 
@@ -58,14 +57,17 @@ namespace RebarExercise.Controllers
         {
             if (!IsValidOrder(order))
             {
+
                 return false;
             }
             if (order.ShakesOrder.Count > 10)
             {
+
                 return false;
             }
             if (!ValidateShakes(order))
             {
+
                 return false;
             }
 
@@ -75,6 +77,7 @@ namespace RebarExercise.Controllers
 
         private bool IsValidOrder(Order order)
         {
+
             return order != null && order.ShakesOrder != null;
         }
 

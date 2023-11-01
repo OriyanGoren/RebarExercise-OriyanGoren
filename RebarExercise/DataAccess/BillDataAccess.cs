@@ -14,6 +14,7 @@ namespace RebarExercise.DataAccess
         {
             var client = new MongoClient(ConnectingString);
             var database = client.GetDatabase(DataBaseName);
+            
             return database.GetCollection<T>(collection);
         }
 
@@ -22,6 +23,7 @@ namespace RebarExercise.DataAccess
         {
             var billsCollection = ConnectToMongo<Bill>(CollectionName);
             var result = await billsCollection.FindAsync(_ => true);
+            
             return result.ToList();
         }
 

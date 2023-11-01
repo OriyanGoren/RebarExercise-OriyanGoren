@@ -19,6 +19,7 @@ namespace RebarExercise.DataAccess
         {
             var client = new MongoClient(ConnectingString);
             var database = client.GetDatabase(DataBaseName);
+            
             return database.GetCollection<T>(collection);
         }
 
@@ -26,6 +27,7 @@ namespace RebarExercise.DataAccess
         public async Task<List<ShakeMenu>> GetShakesFromMenu()
         {
             var result = await _shakesCollection.FindAsync(_ => true);
+            
             return result.ToList();
         }
 
@@ -38,6 +40,7 @@ namespace RebarExercise.DataAccess
         public ShakeMenu GetShakeByName(string name)
         {
             var result = _shakesCollection.Find(shake => shake.Name == name);
+            
             return result.FirstOrDefault();
         }
 
@@ -45,6 +48,7 @@ namespace RebarExercise.DataAccess
         {
             var filter = Builders<ShakeMenu>.Filter.Eq(o => o.Id, shakeId);
             var result = await _shakesCollection.Find(filter).FirstOrDefaultAsync();
+            
             return result;
         }
     }

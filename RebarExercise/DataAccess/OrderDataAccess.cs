@@ -19,6 +19,7 @@ namespace RebarExercise.DataAccess
         {
             var client = new MongoClient(ConnectingString);
             var database = client.GetDatabase(DataBaseName);
+            
             return database.GetCollection<T>(collection);
         }
 
@@ -26,6 +27,7 @@ namespace RebarExercise.DataAccess
         public async Task<List<Order>> GetOrders()
         {
             var result = await _ordersCollection.FindAsync(_ => true);
+            
             return result.ToList();
         }
 
@@ -39,6 +41,7 @@ namespace RebarExercise.DataAccess
         {
             var filter = Builders<Order>.Filter.Eq(o => o.Id, orderId);
             var result = await _ordersCollection.Find(filter).FirstOrDefaultAsync();
+            
             return result;
         }
 
