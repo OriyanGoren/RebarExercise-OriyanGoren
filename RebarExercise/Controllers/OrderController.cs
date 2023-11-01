@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using RebarExercise.DataAccess;
 using RebarExercise.Models;
 
@@ -22,22 +23,35 @@ namespace RebarExercise.Controllers
             return Ok(orders);
         }
 
+        [HttpGet("{orderId}")]
+        public async Task<ActionResult<Order>> GetOrder(Guid orderId)
+        {
+            var order = await _orderDataAccess.GetOrderById(orderId);
+
+            if (order == null)
+            {
+                return NotFound("Order not found");
+            }
+
+            return Ok(order);
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateOrder([FromBody] Order order)
         {
+            DateTime orderReceivedTime = DateTime.Now;
             bool isValidOrder = CheckValidShakes(order);
-
             if (!isValidOrder)
             {
                 return BadRequest("Invalid order data.");
             }
-
             CalculateOrderPrice(order);
             SetOrderDate(order);
-
             await _orderDataAccess.CreateOrder(order);
+            DateTime orderProcessedTime = DateTime.Now;
+            TimeSpan processingTime = orderProcessedTime - orderReceivedTime;
 
-            return Ok("Order created successfully");
+            return Ok($"Order created successfully. Processing time: {processingTime}");
         }
 
         private bool CheckValidShakes(Order order)

@@ -34,5 +34,12 @@ namespace RebarExercise.DataAccess
         {
             await _ordersCollection.InsertOneAsync(order);
         }
+
+        public async Task<Order> GetOrderById(Guid orderId)
+        {
+            var filter = Builders<Order>.Filter.Eq(o => o.Id, orderId);
+            var result = await _ordersCollection.Find(filter).FirstOrDefaultAsync();
+            return result;
+        }
     }
 }

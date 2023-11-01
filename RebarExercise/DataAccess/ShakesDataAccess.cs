@@ -41,5 +41,12 @@ namespace RebarExercise.DataAccess
             return result.FirstOrDefault();
         }
 
+        public async Task<ShakeMenu> GetShakeById(Guid shakeId)
+        {
+            var filter = Builders<ShakeMenu>.Filter.Eq(o => o.Id, shakeId);
+            var result = await _shakesFromMenuCollection.Find(filter).FirstOrDefaultAsync();
+            return result;
+        }
+
     }
 }
