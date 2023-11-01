@@ -18,78 +18,99 @@ namespace RebarExercise.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            try
-            {
-                var orders = await _orderDataAccess.GetOrders();
-                return Ok(orders);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal Server Error: {ex.Message}");
-            }
+            var orders = await _orderDataAccess.GetOrders();
+            return Ok(orders);
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateOrder([FromBody] Order order)
         {
-            try
-            {
+            bool isValidOrder = CheckValidShakes(order);
 
-                if (order == null || order.ShakesOrder == null)
-                {
-                    return BadRequest("Invalid order data.");
-                }
-                if(order.ShakesOrder.Count > 10)
-                {
-                    return BadRequest("You cannot order more than 10 shakes.");
-                }
-                ShakesDataAccess shakeDataAccess = new ShakesDataAccess();
-                foreach (ShakeOrder shakeOrder in order.ShakesOrder)
-                {
-                    var shake = shakeDataAccess.GetShakeFromMenu(shakeOrder.Name);
-                    
-                    if (shake == null)
-                    {
-                        return BadRequest("The shake you entered does not appear in the menu.");
-                    }
-                    else if (shakeOrder.Size == "S")
-                    {
-                        shakeOrder.Price = shake.PriceSizeS;
-                    }
-                    else if(shakeOrder.Size == "M")
-                    {
-                        shakeOrder.Price = shake.PriceSizeM;
-                    }
-                    else if(shakeOrder.Size == "L")
-                    {
-                        shakeOrder.Price = shake.PriceSizeL;
-                    }
-                    else
-                    {
-                        return BadRequest("The size of the shake entered is incorrect.");
-                    }
-                }
-                order.Date = DateTime.Now;
-                order.Price = CalculatePrice(order);
-                await _orderDataAccess.CreateOrder(order);
-                return Ok("Order created successfully");
-            }
-            catch (Exception ex)
+            if (!isValidOrder)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal Server Error: {ex.Message}");
+                return BadRequest("Invalid order data.");
             }
+
+            CalculateOrderPrice(order);
+            SetOrderDate(order);
+
+            await _orderDataAccess.CreateOrder(order);
+
+            return Ok("Order created successfully");
         }
 
-        private double CalculatePrice(Order order)
+        private bool CheckValidShakes(Order order)
+        {
+            if (!IsValidOrder(order))
+            {
+                return false;
+            }
+            if (order.ShakesOrder.Count > 10)
+            {
+                return false;
+            }
+            if (!ValidateShakes(order))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+
+        private bool IsValidOrder(Order order)
+        {
+            return order != null && order.ShakesOrder != null;
+        }
+
+        private bool ValidateShakes(Order order)
+        {
+            ShakesDataAccess shakeDataAccess = new ShakesDataAccess();
+            foreach (ShakeOrder shakeOrder in order.ShakesOrder)
+            {
+                var shake = shakeDataAccess.GetShakeFromMenu(shakeOrder.Name);
+
+                if (shake == null)
+                {
+
+                    return false;
+                }
+                else if (shakeOrder.Size == "S")
+                {
+                    shakeOrder.Price = shake.PriceSizeS;
+                }
+                else if (shakeOrder.Size == "M")
+                {
+                    shakeOrder.Price = shake.PriceSizeM;
+                }
+                else if (shakeOrder.Size == "L")
+                {
+                    shakeOrder.Price = shake.PriceSizeL;
+                }
+                else
+                {
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void CalculateOrderPrice(Order order)
         {
             double sumOfPrices = 0;
             foreach (ShakeOrder shake in order.ShakesOrder)
             {
                 sumOfPrices += shake.Price;
             }
-
-            return sumOfPrices;
+            order.Price = sumOfPrices;
         }
 
+        private void SetOrderDate(Order order)
+        {
+            order.Date = DateTime.Now;
+        }
     }
 }

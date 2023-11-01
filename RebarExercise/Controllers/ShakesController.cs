@@ -18,35 +18,23 @@ namespace RebarExercise.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShakeMenu>>> GetShakesFromMenu()
         {
-            try
-            {
-                var shakes = await _shakesMenuDataAccess.GetShakesFromMenu();
-                return Ok(shakes);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal Server Error: {ex.Message}");
-            }
+            var shakes = await _shakesMenuDataAccess.GetShakesFromMenu();
+
+            return Ok(shakes);
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateShakeToMenu([FromBody] ShakeMenu shakeMenu)
         {
-            try
+            if (shakeMenu == null)
             {
-                if (shakeMenu == null)
-                {
-                    return BadRequest("Invalid shake data.");
-                }
 
-                await _shakesMenuDataAccess.CreateShakeToMenu(shakeMenu);
-                return Ok("Shake created successfully");
+                return BadRequest("Invalid shake data.");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal Server Error: {ex.Message}");
-            }
+
+            await _shakesMenuDataAccess.CreateShakeToMenu(shakeMenu);
+
+            return Ok("Shake created successfully");
         }
-        
     }
 }
