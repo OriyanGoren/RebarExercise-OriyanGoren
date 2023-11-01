@@ -41,5 +41,13 @@ namespace RebarExercise.DataAccess
             var result = await _ordersCollection.Find(filter).FirstOrDefaultAsync();
             return result;
         }
+
+        public List<Order> GetOrdersByDate(DateTime date)
+        {
+            var allOrders = _ordersCollection.Find(_ => true).ToList();
+            var ordersByDate = allOrders.Where(order => order.Date.Date == date.Date).ToList();
+            
+            return ordersByDate;
+        }
     }
 }

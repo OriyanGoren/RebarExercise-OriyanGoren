@@ -9,42 +9,33 @@ namespace RebarExercise.Controllers
     public class BillController : ControllerBase
     {
         private readonly BillDataAccess _billDataAccess;
+        private readonly OrderDataAccess _orderDataAccess;
 
-        public BillController(BillDataAccess billDataAccess)
+        public BillController(BillDataAccess billDataAccess, OrderDataAccess orderDataAccess)
         {
             _billDataAccess = billDataAccess;
+            _orderDataAccess = orderDataAccess;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Bill>>> GetBills()
+        [HttpGet("{password}")]
+        public async Task<ActionResult> GetBills(string password)
         {
-            try
+            Bill bill = new Bill();
+            if (!IsCorrectPassword(password))
             {
-                var bills = await _billDataAccess.GetBills();
-                return Ok(bills);
+
+                return BadRequest("Invalid password");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal Server Error: {ex.Message}");
-            }
+            var todayOrders = _orderDataAccess.GetOrdersByDate(DateTime.Now);
+            bill.NumberOfOrders = todayOrders.Count();
+            bill.Price = todayOrders.Sum(order => order.Price);
+            
+            return Ok(new { bill.NumberOfOrders, bill.Price });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateBill([FromBody] Bill bill)
+        private bool IsCorrectPassword(string password)
         {
-            try
-            {
-                if (bill == null)
-                {
-                    return BadRequest("Invalid shake data.");
-                }
-                await _billDataAccess.CreateBill(bill);
-                return Ok("Bill created successfully");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal Server Error: {ex.Message}");
-            }
+            return password == "RebarOriyanGoren";
         }
     }
 }

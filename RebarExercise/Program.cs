@@ -9,6 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<OrderDataAccess>();
+builder.Services.AddScoped<BillDataAccess>();
 
 var app = builder.Build();
 
