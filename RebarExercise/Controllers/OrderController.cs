@@ -83,7 +83,7 @@ namespace RebarExercise.Controllers
             ShakesDataAccess shakeDataAccess = new ShakesDataAccess();
             foreach (ShakeOrder shakeOrder in order.ShakesOrder)
             {
-                var shake = shakeDataAccess.GetShakeFromMenu(shakeOrder.Name);
+                var shake = shakeDataAccess.GetShakeByName(shakeOrder.Name);
 
                 if (shake == null)
                 {

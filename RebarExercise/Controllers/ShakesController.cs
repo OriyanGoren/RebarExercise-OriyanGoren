@@ -8,17 +8,17 @@ namespace RebarExercise.Controllers
     [ApiController]
     public class ShakesController : ControllerBase
     {
-        private readonly ShakesDataAccess _shakesMenuDataAccess;
+        private readonly ShakesDataAccess _shakesDataAccess;
 
         public ShakesController()
         {
-            _shakesMenuDataAccess = new ShakesDataAccess();
+            _shakesDataAccess = new ShakesDataAccess();
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShakeMenu>>> GetShakes()
         {
-            var shakes = await _shakesMenuDataAccess.GetShakesFromMenu();
+            var shakes = await _shakesDataAccess.GetShakesFromMenu();
 
             return Ok(shakes);
         }
@@ -26,7 +26,7 @@ namespace RebarExercise.Controllers
         [HttpGet("{shakeId}")]
         public async Task<ActionResult<ShakeMenu>> GetShake(Guid shakeId)
         {
-            var shake = await _shakesMenuDataAccess.GetShakeById(shakeId);
+            var shake = await _shakesDataAccess.GetShakeById(shakeId);
             if (shake == null)
             {
                 return NotFound("Shake not found");
@@ -36,14 +36,21 @@ namespace RebarExercise.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateShakeToMenu([FromBody] ShakeMenu shakeMenu)
+        public async Task<ActionResult> CreateShake([FromBody] ShakeMenu shakeMenu)
         {
             if (shakeMenu == null)
             {
 
                 return BadRequest("Invalid shake data.");
             }
-            await _shakesMenuDataAccess.CreateShakeToMenu(shakeMenu);
+            var existingShake = _shakesDataAccess.GetShakeByName(shakeMenu.Name);
+            if (existingShake != null)
+            {
+
+                return BadRequest("Shake already exists in the menu.");
+            }
+
+            await _shakesDataAccess.CreateShakeToMenu(shakeMenu);
 
             return Ok("Shake created successfully");
         }
